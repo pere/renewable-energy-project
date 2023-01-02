@@ -1,6 +1,6 @@
 <script>
   import svelteLogo from "./assets/svelte.svg";
-  import Counter from "./lib/Counter.svelte";
+  import Counter from "./Components/Counter.svelte";
   import * as aq from "arquero";
 </script>
 
@@ -13,7 +13,7 @@
       <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
     </a>
   </div>
-  <h1>Vite + Svelte</h1>
+  <h1>Vite + Svelte test</h1>
 
   <div class="card">
     <Counter />

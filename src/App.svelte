@@ -1,48 +1,49 @@
 <script>
   import svelteLogo from "./assets/svelte.svg";
-  import Counter from "./Components/Counter.svelte";
+  
+  //import xAxis from "./Components/Common/Axis.svelte";
+  //import DataProcessing from "./Components/DataProcessing/Processing.svelte";
+  import energyData from './data/energyData_2010.json';
   import * as aq from "arquero";
+  import Force from "./Components/Charts/Force.svelte";
+
+  let width, height;
+  let year=2018;
+ let year2;
+
+     /*
+    test
+    */
 </script>
 
+
+
 <main>
-  <div>
-    <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-      <img src="/vite.svg" class="logo" alt="Vite Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
-  </div>
-  <h1>Vite + Svelte test</h1>
+<div>in 555</div>
+{#if {width} }
+<div class='force' bind:clientWidth={width} bind:clientHeight={height}>
+   <Force {width} {height} {year} year2={year2}/>
+</div>   
+{/if}
 
-  <div class="card">
-    <Counter />
-  </div>
+  	<div class='col'>
+		<p>Basic setup</p>
+		<button on:click={() => year2 = 2019}>2019</button>
+		<button on:click={() => year2 = 2020}>2020</button>
+	</div>
 
-  <p>
-    Check out <a
-      href="https://github.com/sveltejs/kit#readme"
-      target="_blank"
-      rel="noreferrer">SvelteKit</a
-    >, the official Svelte app framework powered by Vite!
-  </p>
-
-  <p class="read-the-docs">Click on the Vite and Svelte logos to learn more</p>
 </main>
 
-<style>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-  }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
-  }
-  .read-the-docs {
-    color: #888;
-  }
+
+ <style>
+	main {
+		padding: 1em;
+		margin: 0 auto;
+	}
+
+	:global(.force) {
+		height:50vh;
+    width:90vw;
+		margin-bottom:3rem;
+	}
 </style>

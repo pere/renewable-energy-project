@@ -1,5 +1,6 @@
 
 <script>
+  import * as aq from "arquero";
 import energyData from './energyData_2010.json';
 import continentsDataClean from './continentsDataClean.json';
 
@@ -27,6 +28,7 @@ let energyClean = energyData.map(d => {
     );
     let energyCleanArq = aq.from(energyClean);
 let continentsCleanArq = aq.from(continentsDataClean);
-alert(joinedData.length)
-joinedData = energyCleanArq.join_full(continentsCleanArq).objects()    
+
+console.warn(energyClean)
+joinedData = energyCleanArq.join_left(continentsCleanArq).objects()    
 </script>    

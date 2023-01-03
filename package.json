@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "arquero": "^5.1.0",
-    "svelte-csv": "^1.2.8",
-    "d3": "latest"
+    "d3": "latest",
+    "svelte-csv": "^1.2.8"
   }
 }

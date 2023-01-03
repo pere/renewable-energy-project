@@ -1,7 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 import continentsDataClean from '../../data/continentsDataClean.json';
-import energyData from '../../data/energyData_2010.json';
+
 import * as d3 from "d3";
 
 
@@ -14,6 +14,7 @@ export let year2;
 export let year;
 
 
+/*
 let energyClean = energyData.map(d => { 
   var newd = {
     country : d.country,
@@ -30,16 +31,19 @@ let energyClean = energyData.map(d => {
 
   return newd;
 }).filter((d) =>
-    d.gdp >= 0 && d.renewablesShare >= 0 &&
-    d.year === parseInt(year) &&
+    d.gdp >= 0 && d.renewablesShare >= 0 
+    //&& d.year === parseInt(year) &&
     d.country !== "World"
   )
 ;
 let energyCleanArq = aq.from(energyClean);
 let continentsCleanArq = aq.from(continentsDataClean);
 let joinedData = energyCleanArq.join_full(continentsCleanArq).objects()
+
 //.filter(d=>d.year==2018)
+*/
 let length=joinedData.length;
+
 console.log('def')
 console.info(year,length)
 const maxRadius = 40;

@@ -1,11 +1,11 @@
 
-<script>
+
   import * as aq from "arquero";
 import energyData from './energyData_2010.json';
 import continentsDataClean from './continentsDataClean.json';
 
+//export let joinedData;
 export let joinedData;
-
 let energyClean = energyData.map(d => { 
     var newd = {
       country : d.country,
@@ -30,5 +30,6 @@ let energyClean = energyData.map(d => {
 let continentsCleanArq = aq.from(continentsDataClean);
 
 console.warn(energyClean)
-joinedData = energyCleanArq.join_left(continentsCleanArq).objects()    
-</script>    
+
+joinedData=energyCleanArq.join_left(continentsCleanArq).objects()    
+ 

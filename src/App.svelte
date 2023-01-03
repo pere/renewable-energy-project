@@ -4,16 +4,15 @@
   //import xAxis from "./Components/Common/Axis.svelte";
   //import DataProcessing from "./Components/DataProcessing/Processing.svelte";
   //import energyData from './data/energyData_2010.json';
-  import { joinedData } from './data/Processing.svelte';
+  import  {joinedData}  from './data/Processing.js';
   import * as aq from "arquero";
   import Force from "./Components/Charts/Force.svelte";
   import Range from "./Components/Utils/Range.svelte";
 
   let width, height;
   $: year = 2018;
-  debugger
-  console.info(joinedData.length)
-  alert(joinedData.length)
+
+
   //let year=2018;
  let year2;
 
@@ -36,11 +35,11 @@
 </div>
 -->
 
-{#if {width} }
+<!-- {#if {width} } -->
 <div class='force' bind:clientWidth={width} bind:clientHeight={height}>
-   <Force {width} {height} {year} year2={year2}/>
+   <Force {width} {height} {year} year2={year2} {joinedData}/>
 </div>   
-{/if}
+<!--  {/if} -->
 
 <div>
   <label for="basic-range">Year {year}</label>

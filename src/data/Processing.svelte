@@ -1,9 +1,9 @@
 
 <script>
-import energyData from '../../data/energyData_2010.json';
-import continentsDataClean from '../../data/continentsDataClean.json';
+import energyData from './energyData_2010.json';
+import continentsDataClean from './continentsDataClean.json';
 
-
+export let joinedData;
 
 let energyClean = energyData.map(d => { 
     var newd = {
@@ -23,9 +23,10 @@ let energyClean = energyData.map(d => {
   }).filter((d) =>
       d.gdp >= 0 && d.renewablesShare >= 0 
       //&& d.year === parseInt(year) &&
-      d.country !== "World"
+      && d.country !== "World"
     );
     let energyCleanArq = aq.from(energyClean);
 let continentsCleanArq = aq.from(continentsDataClean);
-let joinedData = energyCleanArq.join_full(continentsCleanArq).objects()    
+alert(joinedData.length)
+joinedData = energyCleanArq.join_full(continentsCleanArq).objects()    
 </script>    

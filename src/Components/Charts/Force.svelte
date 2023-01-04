@@ -1,10 +1,10 @@
 <script>
 	import { onMount } from 'svelte';
 
-
+  //import {scaleLinear, scaleBand} from 'd3-scale';
 import * as d3 from "d3";
 
-import {scaleLinear, scaleBand} from 'd3-scale';
+
 
 import * as aq from "arquero";
 
@@ -50,31 +50,56 @@ let length=my_data.length;
 $ :
 {
 
-  console.log(my_data[0].gdp)
+  //console.log(my_data[0].gdp)
 }
 
-console.info(year,length)
+console.info([...new Set(my_data.map(d => d.renewablesConsPerCap))])
 const maxRadius = 40;
 const margin = 100;
-
-
-$ : xScale = d3.scaleBand()                
-        .domain([...new Set(my_data.filter(d=>d.year==year).map(d => d.renewablesConsPerCap))])
+//alert(d3.max(my_data, d => d.gdp))
+$: xScale2 = d3.scaleBand()                
+.domain([...new Set(
+          my_data.map(d => d.renewablesConsPerCap)
+        )])
+        
+       // .domain(d3.range(0, 50))
         .range([margin , width - margin]);
 
-        $ : radiusScale = d3.scaleSqrt()
+ //alert(xScale2(4356.172))
+
+
+export let xScale =  //(d) => {
+  
+ d3.scaleBand()                
+        .domain([...new Set(
+          my_data.map(d => d.renewablesConsPerCap)
+        )])
+        
+       // .domain(d3.range(0, 50))
+        .range([margin , width - margin]);
+
+ 
+
+
+
+export let radiusScale = //(d) => {
+    d3.scaleSqrt()
                 .domain([0,d3.max(my_data, d => d.gdp)])
                 .range([0, maxRadius]);     
 
-                $ : colorScale = d3.scaleOrdinal()
+          
+//}
+export let colorScale = //(d) => {
+    d3.scaleOrdinal()
                 .domain([...new Set(my_data.map(d => d.continent))])
                 .range(d3.schemeCategory10);
-
-$ : simulation = d3.forceSimulation(my_data)
+//}
+/*
+$ : simulation =() =>  d3.forceSimulation(my_data)
       .force('x', d3.forceX().x(d => xScale(d.renewablesConsPerCap)))
       .force('y', d3.forceY().y(height/2))
       .force('collision', d3.forceCollide().radius( d =>radiusScale(d.gdp) + 2));
-
+*/
  
 
 let tooltip = d3.select('body')
@@ -89,7 +114,28 @@ let tooltip = d3.select('body')
       .style('color', '#fff');
 
    let el;
+/*
+   $ :{
+      //() => {
+        console.warn('simuilating 2222')
+        d3.forceSimulation(my_data)
+      .force('x', d3.forceX().x(d => xScale(d.renewablesConsPerCap)))
+      .force('y', d3.forceY().y(height/2))
+      .force('collision', d3.forceCollide().radius( d =>radiusScale(d.gdp) + 2))
+     // .tick(1000000);
+   }
+     */
+     
   
+  //}
+
+/*
+      simulation.on("tick", () => {
+    node
+        .attr("cx", d => d.x)
+        .attr("cy", d => d.y);
+  });  
+  */
 
   /*
     
@@ -148,7 +194,18 @@ $ : m=my_data[0].year+' 222';
 
 </script>
 
-<div>Force here counts aressss{my_data.length} for year {my_data[0].year} or {m}</div>
+
+
+{#each my_data as d,i}
+<circle 
+    r={radiusScale(d.gdp) }
+    fill={colorScale(d.continent)}
+    fill-opacity={0.4}
+/>
+
+{/each}
+
+<!-- <div>Force here counts aressss{my_data.length} for year {my_data[0].year} or {m}</div> -->
 
 
 <!--

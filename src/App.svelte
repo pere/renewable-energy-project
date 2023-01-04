@@ -16,7 +16,7 @@
 
   $ : filtered=joinedData.filter((d)=>d.year==year)
   $ : {
-    console.warn(joinedData,year,filtered)
+    //console.warn(joinedData,year,filtered)
   }
   let years=[...new Set(joinedData.map(d=>d.year))]
   //console.warn(years)
@@ -27,18 +27,14 @@
 
 <main>
 <div>Testing</div>
-
+<!--
 <select bind:value={year}>
 	{#each years as d }
-	<!--
-  {
 
-	console.log(year,filtered)
-	}
-  -->
 	    <option id={d}>{d}</option> 
 	{/each}
 </select>
+-->
 <Force width=500 {height} bind:my_data={filtered}/> 
 <svg class="force" {width} {height} xmlns:svg='https://www.w3.org/2000/svg' viewBox='0 0 {width} {height}'>
   <Force width=500 {height} bind:my_data={filtered}/> 
@@ -46,6 +42,7 @@
 
 <div>
   <label for="basic-range">Years {year}</label>
+
   <Range
    bind:my_data={filtered} 
     on:change={(e) => (year=e.detail.value)}
@@ -54,6 +51,7 @@
     max={2018}
     initialValue={year}
   />
+
 </div>
 
   	<div class='col'>

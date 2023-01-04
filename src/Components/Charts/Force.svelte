@@ -4,16 +4,20 @@
 
 import * as d3 from "d3";
 
-
+import {scaleLinear, scaleBand} from 'd3-scale';
 
 import * as aq from "arquero";
 
 export let width;
 export let height;
-export let year2;
+
 export let year;
 
-export let joinedData;
+export let my_data;
+
+
+$ : values=my_data;
+
 /*
 let energyClean = energyData.map(d => { 
   var newd = {
@@ -38,34 +42,36 @@ let energyClean = energyData.map(d => {
 ;
 let energyCleanArq = aq.from(energyClean);
 let continentsCleanArq = aq.from(continentsDataClean);
-let joinedData = energyCleanArq.join_full(continentsCleanArq).objects()
+let my_data = energyCleanArq.join_full(continentsCleanArq).objects()
 
 //.filter(d=>d.year==2018)
 */
-let length=joinedData.length;
+let length=my_data.length;
 
-console.log('def')
+console.log(my_data)
 console.info(year,length)
 const maxRadius = 40;
 const margin = 100;
 
-let xScale = d3.scaleBand()                
-        .domain([...new Set(joinedData.filter(d=>d.year==year).map(d => d.renewablesConsPerCap))])
+
+$ : xScale = d3.scaleBand()                
+        .domain([...new Set(my_data.filter(d=>d.year==year).map(d => d.renewablesConsPerCap))])
         .range([margin , width - margin]);
 
- let radiusScale = d3.scaleSqrt()
-                .domain([0,d3.max(joinedData, d => d.gdp)])
+        $ : radiusScale = d3.scaleSqrt()
+                .domain([0,d3.max(my_data, d => d.gdp)])
                 .range([0, maxRadius]);     
 
-  let colorScale = d3.scaleOrdinal()
-                .domain([...new Set(joinedData.map(d => d.continent))])
+                $ : colorScale = d3.scaleOrdinal()
+                .domain([...new Set(my_data.map(d => d.continent))])
                 .range(d3.schemeCategory10);
 
-$ : simulation = d3.forceSimulation(joinedData)
+$ : simulation = d3.forceSimulation(my_data)
       .force('x', d3.forceX().x(d => xScale(d.renewablesConsPerCap)))
       .force('y', d3.forceY().y(height/2))
       .force('collision', d3.forceCollide().radius( d =>radiusScale(d.gdp) + 2));
 
+ 
 
 let tooltip = d3.select('body')
       .append('div')
@@ -79,15 +85,16 @@ let tooltip = d3.select('body')
       .style('color', '#fff');
 
    let el;
-   onMount(() => {
+  
 
-
-    let s=joinedData.filter(d=>d.year==year)
+  /*
     
     // This is executed when the component is loaded into the DOM
    console.info(d3.select('.force'))
 console.warn('year2 is '+year2, 'year is '+year)
-   let node = d3.select('.force svg').selectAll('circle')
+   let node = d3.select('.force svg')
+   
+     .selectAll('circle')
      .data(s)
      .join('circle')
      .attr('r', d => radiusScale(d.gdp))
@@ -121,19 +128,19 @@ console.warn('year2 is '+year2, 'year is '+year)
                       .attr("stroke", "none");})
 
 
-  let simulation = d3.forceSimulation(joinedData)
+  let simulation = d3.forceSimulation(my_data)
       .force('x', d3.forceX().x(d => xScale(d.renewablesConsPerCap)))
       .force('y', d3.forceY().y(height/2))
       .force('collision', d3.forceCollide().radius( d =>radiusScale(d.gdp) + 2));
 
-//
+
      simulation.on("tick", () => {
     node
         .attr("cx", d => d.x)
         .attr("cy", d => d.y);
   });  
-  
-  })
+*/
+
 </script>
 
 
@@ -147,9 +154,9 @@ console.warn('year2 is '+year2, 'year is '+year)
 
 
 <!--
-<div>Force here counts aressss{joinedData.length}</div>
+<div>Force here counts aressss{my_data.length}</div>
 
-{#each joinedData as data}
+{#each my_data as data}
 <div>{data.country}</div>
 {/each}
 -->

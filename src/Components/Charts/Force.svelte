@@ -47,8 +47,12 @@ let my_data = energyCleanArq.join_full(continentsCleanArq).objects()
 //.filter(d=>d.year==2018)
 */
 let length=my_data.length;
+$ :
+{
 
-console.log(my_data)
+  console.log(my_data[0].gdp)
+}
+
 console.info(year,length)
 const maxRadius = 40;
 const margin = 100;
@@ -140,17 +144,11 @@ console.warn('year2 is '+year2, 'year is '+year)
         .attr("cy", d => d.y);
   });  
 */
+$ : m=my_data[0].year+' 222';
 
 </script>
 
-
-
-<svg bind:this={el} xmlns:svg='https://www.w3.org/2000/svg' 
-	viewBox='0 0 {width} {height}'
-	{width}
-	{height}
-    >
-</svg>
+<div>Force here counts aressss{my_data.length} for year {my_data[0].year} or {m}</div>
 
 
 <!--

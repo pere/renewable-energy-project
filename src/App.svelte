@@ -12,55 +12,54 @@
   let width=500;
   let height=400;
   
-  $: year = 2018;
+  let year = 2013;
 
+  $ : filtered=joinedData.filter((d)=>d.year==year)
+  $ : {
+    console.warn(joinedData,year,filtered)
+  }
+  let years=[...new Set(joinedData.map(d=>d.year))]
+  //console.warn(years)
 
-  //let year=2018;
- let year2;
-
-     /*
-    test
-    */
 </script>
 
 
 
 <main>
 <div>Testing</div>
-<!--
-<div class="force">
-  
-    
-      <Force {width} {height} {year} year2={year2} />
-    
-  
-</div>
--->
 
-<!-- {#if {width} } -->
-<div class='force'>
-  <!-- bind:clientWidth={width} bind:clientHeight={height}> -->
-  {#if {width} } 
-   <Force {width} {height} {year} year2={year2} {joinedData}/>
-   {/if} 
-</div>   
-<!--  {/if} -->
+<select bind:value={year}>
+	{#each years as d }
+	<!--
+  {
+
+	console.log(year,filtered)
+	}
+  -->
+	    <option id={d}>{d}</option> 
+	{/each}
+</select>
+<Force width=500 {height} bind:my_data={filtered}/> 
+<svg class="force" {width} {height} xmlns:svg='https://www.w3.org/2000/svg' viewBox='0 0 {width} {height}'>
+  <Force width=500 {height} bind:my_data={filtered}/> 
+</svg>
 
 <div>
   <label for="basic-range">Years {year}</label>
   <Range
+   bind:my_data={filtered} 
     on:change={(e) => (year=e.detail.value)}
     id="basic-slider"
-    min={2018}
-    max={2022}
-    initialValue={2018}
+    min={2011}
+    max={2018}
+    initialValue={year}
   />
 </div>
 
   	<div class='col'>
 		<p>Basic setup</p>
-		<button on:click={() => year2 = 2019}>2019</button>
-		<button on:click={() => year2 = 2020}>2020</button>
+		<button on:click={() => year = 2012}>2012</button>
+		<button on:click={() => year = 2015}>2015</button>
 	</div>
 
 </main>

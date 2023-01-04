@@ -80,8 +80,10 @@ let tooltip = d3.select('body')
 
    let el;
    onMount(() => {
+
+
     let s=joinedData.filter(d=>d.year==year)
-    alert(s.length)
+    
     // This is executed when the component is loaded into the DOM
    console.info(d3.select('.force'))
 console.warn('year2 is '+year2, 'year is '+year)
@@ -123,17 +125,18 @@ console.warn('year2 is '+year2, 'year is '+year)
       .force('x', d3.forceX().x(d => xScale(d.renewablesConsPerCap)))
       .force('y', d3.forceY().y(height/2))
       .force('collision', d3.forceCollide().radius( d =>radiusScale(d.gdp) + 2));
-alert('sdf')
 
+//
      simulation.on("tick", () => {
     node
         .attr("cx", d => d.x)
         .attr("cy", d => d.y);
   });  
+  
   })
 </script>
 
-<!-- {#if width } -->
+
 
 <svg bind:this={el} xmlns:svg='https://www.w3.org/2000/svg' 
 	viewBox='0 0 {width} {height}'
@@ -141,7 +144,7 @@ alert('sdf')
 	{height}
     >
 </svg>
-<!-- {/if} -->
+
 
 <!--
 <div>Force here counts aressss{joinedData.length}</div>

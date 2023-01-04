@@ -9,7 +9,9 @@
   import Force from "./Components/Charts/Force.svelte";
   import Range from "./Components/Utils/Range.svelte";
 
-  let width, height;
+  let width=500;
+  let height=400;
+  
   $: year = 2018;
 
 
@@ -24,7 +26,7 @@
 
 
 <main>
-<div>in sdfsdf</div>
+<div>Testing</div>
 <!--
 <div class="force">
   
@@ -36,13 +38,16 @@
 -->
 
 <!-- {#if {width} } -->
-<div class='force' bind:clientWidth={width} bind:clientHeight={height}>
+<div class='force'>
+  <!-- bind:clientWidth={width} bind:clientHeight={height}> -->
+  {#if {width} } 
    <Force {width} {height} {year} year2={year2} {joinedData}/>
+   {/if} 
 </div>   
 <!--  {/if} -->
 
 <div>
-  <label for="basic-range">Year {year}</label>
+  <label for="basic-range">Years {year}</label>
   <Range
     on:change={(e) => (year=e.detail.value)}
     id="basic-slider"
@@ -68,8 +73,7 @@
 	}
 
 	:global(.force) {
-		height:50vh;
-    width:90vw;
+	
 		margin-bottom:3rem;
 	}
 </style>

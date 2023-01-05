@@ -17,6 +17,7 @@
   "dependencies": {
     "arquero": "^5.1.0",
     "d3": "latest",
+    "d3-tip": "^0.9.1",
     "svelte-csv": "^1.2.8"
   }
 }

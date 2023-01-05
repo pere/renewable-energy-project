@@ -1,10 +1,10 @@
 <script>
 	import { onMount } from 'svelte';
 
-  //import {scaleLinear, scaleBand} from 'd3-scale';
+import {scaleLinear, scaleBand} from 'd3-scale';
 import * as d3 from "d3";
 
-
+import d3Tip from 'd3-tip';
 
 import * as aq from "arquero";
 
@@ -15,37 +15,16 @@ export let year;
 
 export let my_data;
 
+const maxRadius = 20;
+const margin = 40;
 
+onMount(  () => {
+ // alert(d3.select('svg.force circle').length)
+ 
+})
+let nodes;
 $ : values=my_data;
 
-/*
-let energyClean = energyData.map(d => { 
-  var newd = {
-    country : d.country,
-    year : d.year,
-    iso_code : d.iso_code,
-    gdp : d.gdp,
-    renewablesShare : d.renewables_share_energy,
-    renewablesConsPerCap: d.renewables_energy_per_capita,
-    renewablesGenPerCap: d.renewables_elec_per_capita,
-    renewablesCons: d.renewables_consumption,
-    renewablesConsChangePercPct: d.renewables_cons_change_pct,
-    renewablesConsChangePercTwh: d.renewables_cons_change_twh 
-}
-
-  return newd;
-}).filter((d) =>
-    d.gdp >= 0 && d.renewablesShare >= 0 
-    //&& d.year === parseInt(year) &&
-    d.country !== "World"
-  )
-;
-let energyCleanArq = aq.from(energyClean);
-let continentsCleanArq = aq.from(continentsDataClean);
-let my_data = energyCleanArq.join_full(continentsCleanArq).objects()
-
-//.filter(d=>d.year==2018)
-*/
 let length=my_data.length;
 $ :
 {
@@ -53,54 +32,22 @@ $ :
   //console.log(my_data[0].gdp)
 }
 
-console.info([...new Set(my_data.map(d => d.renewablesConsPerCap))])
-const maxRadius = 40;
-const margin = 100;
-//alert(d3.max(my_data, d => d.gdp))
-$: xScale2 = d3.scaleBand()                
-.domain([...new Set(
-          my_data.map(d => d.renewablesConsPerCap)
-        )])
-        
-       // .domain(d3.range(0, 50))
-        .range([margin , width - margin]);
 
- //alert(xScale2(4356.172))
+$ : xScale = d3.scaleLinear()                
+    .domain([d3.min(my_data, d => d.renewablesConsPerCap), d3.max(my_data, d => d.renewablesConsPerCap)])
+    .range([margin+maxRadius, width - margin]);
+    
 
-
-export let xScale =  //(d) => {
-  
- d3.scaleBand()                
-        .domain([...new Set(
-          my_data.map(d => d.renewablesConsPerCap)
-        )])
-        
-       // .domain(d3.range(0, 50))
-        .range([margin , width - margin]);
-
- 
-
-
-
-export let radiusScale = //(d) => {
-    d3.scaleSqrt()
-                .domain([0,d3.max(my_data, d => d.gdp)])
-                .range([0, maxRadius]);     
+$ :  radiusScale = d3.scaleSqrt()
+                .domain([d3.min(my_data, d => d.gdp),d3.max(my_data, d => d.gdp)])
+                .range([3, maxRadius]);     
 
           
-//}
-export let colorScale = //(d) => {
-    d3.scaleOrdinal()
+
+$ :  colorScale = d3.scaleOrdinal()
                 .domain([...new Set(my_data.map(d => d.continent))])
                 .range(d3.schemeCategory10);
-//}
-/*
-$ : simulation =() =>  d3.forceSimulation(my_data)
-      .force('x', d3.forceX().x(d => xScale(d.renewablesConsPerCap)))
-      .force('y', d3.forceY().y(height/2))
-      .force('collision', d3.forceCollide().radius( d =>radiusScale(d.gdp) + 2));
-*/
- 
+
 
 let tooltip = d3.select('body')
       .append('div')
@@ -113,94 +60,72 @@ let tooltip = d3.select('body')
       .style('border-radius', '4px')
       .style('color', '#fff');
 
-   let el;
-/*
-   $ :{
-      //() => {
-        console.warn('simuilating 2222')
-        d3.forceSimulation(my_data)
-      .force('x', d3.forceX().x(d => xScale(d.renewablesConsPerCap)))
-      .force('y', d3.forceY().y(height/2))
-      .force('collision', d3.forceCollide().radius( d =>radiusScale(d.gdp) + 2))
-     // .tick(1000000);
-   }
-     */
-     
-  
-  //}
-
-/*
-      simulation.on("tick", () => {
-    node
-        .attr("cx", d => d.x)
-        .attr("cy", d => d.y);
-  });  
-  */
-
-  /*
-    
-    // This is executed when the component is loaded into the DOM
-   console.info(d3.select('.force'))
-console.warn('year2 is '+year2, 'year is '+year)
-   let node = d3.select('.force svg')
-   
-     .selectAll('circle')
-     .data(s)
-     .join('circle')
-     .attr('r', d => radiusScale(d.gdp))
-     .attr('fill', d => colorScale(d.continent))
-     .attr('fill-opacity', 0.4)
-
-      .on("mouseover", function(e,d) {
-                    const tooltipWidth = tooltip.node().offsetWidth;
-                    const tooltipHeight = tooltip.node().offsetHeight;
-                    tooltip
-                      .style("left", e.pageX - tooltipWidth/2 +'px')
-                      .style("top", e.pageY-tooltipHeight - 10+'px')
-                      .style('visibility', 'visible')
-                      .html(`<b>Country</b>: ${d.country} <br/>
-                            <b>Year</b>: ${d.year}  <br/>
+let selected_datapoint;
+function mouseover_fx(e,d) {
+              
+      const tooltipWidth = tooltip.node().offsetWidth;
+      const tooltipHeight = tooltip.node().offsetHeight;
+      tooltip
+                            .style("left", e.pageX - tooltipWidth/2 +'px')
+                            .style("top", e.pageY-tooltipHeight - 10+'px')
+                            .style('visibility', 'visible')
+                            //.html('<span>'+d.country+'</span>')
+                            .html(`<b>Country</b>: ${d.country} <br/>
+                            <b>Year</b>: ${d.year} <br/>
                             <b>GDP per cap</b>: ${d.gdp.toLocaleString('en-US', {maximumFractionDigits: 2})}<br/>
-                            <b>Renewable Consumption per cap</b>: ${d.renewablesConsPerCap.toLocaleString('en-US', {maximumFractionDigits: 2})}`);
-                    d3.select(this).attr("fill", "gray").attr("stroke", "black").attr("stroke-width", 1);})
-      
-      .on('mousemove', function(e) {
-                    const tooltipWidth = tooltip.node().offsetWidth;
-                    const tooltipHeight = tooltip.node().offsetHeight;
-                    tooltip
-                      .style("left", e.pageX - tooltipWidth/2 +'px')
-                      .style("top", e.pageY-tooltipHeight - 10+'px')
-      })
-     .on("mouseout", function(e,d) {
-                    tooltip
-                      .style('visibility', 'hidden')
-                    d3.select(this).attr("fill", d => colorScale(d.continent))
-                      .attr("stroke", "none");})
+                            <b>Renewable Consumption per cap</b>: ${d.renewablesConsPerCap.toLocaleString('en-US', {maximumFractionDigits:2})}
+                            `)
+                      
+}
+   
 
+   let displayData = [];
 
-  let simulation = d3.forceSimulation(my_data)
+   function update() {
+		
+		displayData = my_data
+		return my_data
+	}
+
+	
+   $:simulation = d3.forceSimulation(my_data)
       .force('x', d3.forceX().x(d => xScale(d.renewablesConsPerCap)))
       .force('y', d3.forceY().y(height/2))
-      .force('collision', d3.forceCollide().radius( d =>radiusScale(d.gdp) + 2));
+      .force('collision', d3.forceCollide().radius( d =>radiusScale(d.gdp) +1));
+	
 
+	
+	
+	$: simulation.on("tick", update)
 
-     simulation.on("tick", () => {
-    node
-        .attr("cx", d => d.x)
-        .attr("cy", d => d.y);
-  });  
-*/
-$ : m=my_data[0].year+' 222';
+  
 
 </script>
 
 
 
-{#each my_data as d,i}
-<circle 
+{#each displayData as d,i}
+<circle bind:this={nodes}
     r={radiusScale(d.gdp) }
     fill={colorScale(d.continent)}
     fill-opacity={0.4}
+    cx={d.x}
+    cy={d.y}
+    on:mouseover={(e) => {selected_datapoint = d; mouseover_fx(e,d)}}
+    on:mousemove={(e)=>{ 
+      const tooltipWidth = tooltip.node().offsetWidth;
+      const tooltipHeight = tooltip.node().offsetHeight;
+    tooltip
+       .style("left", e.pageX - tooltipWidth/2 +'px')
+      .style("top", e.pageY-tooltipHeight - 10+'px')
+    }}
+    on:mouseout={(e)=>{ 
+      tooltip.style('visibility', 'hidden')
+    }
+  }
+    
+    
+  
 />
 
 {/each}

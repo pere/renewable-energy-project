@@ -4,13 +4,13 @@
   //import xAxis from "./Components/Common/Axis.svelte";
   //import DataProcessing from "./Components/DataProcessing/Processing.svelte";
   //import energyData from './data/energyData_2010.json';
-  import  {joinedData}  from './data/Processing.js';
+  import  {joinedData,continentsArray}  from './data/Processing.js';
   import * as aq from "arquero";
   import Force from "./Components/Charts/Force.svelte";
   import Range from "./Components/Utils/Range.svelte";
 
-  let width=500;
-  let height=400;
+  let width=650;
+  let height=450;
   
   let year = 2013;
 
@@ -27,15 +27,16 @@
 
 <main>
 <div>Testing</div>
-<!--
+
 <select bind:value={year}>
 	{#each years as d }
 
 	    <option id={d}>{d}</option> 
 	{/each}
 </select>
--->
-<Force width=500 {height} bind:my_data={filtered}/> 
+
+
+
 <svg class="force" {width} {height} xmlns:svg='https://www.w3.org/2000/svg' viewBox='0 0 {width} {height}'>
   <Force width=500 {height} bind:my_data={filtered}/> 
 </svg>

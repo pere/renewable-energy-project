@@ -6,6 +6,8 @@ import continentsDataClean from './continentsDataClean.json';
 
 //export let joinedData;
 export let joinedData;
+export let continentsArray;
+
 let energyClean = energyData.map(d => { 
     var newd = {
       country : d.country,
@@ -31,5 +33,6 @@ let continentsCleanArq = aq.from(continentsDataClean);
 
 console.warn(energyClean)
 
+
 joinedData=energyCleanArq.join_left(continentsCleanArq).objects()    
- 
+continentsArray = [...new Set(joinedData.filter(d=>d.continent).map(d => d.continent))] 

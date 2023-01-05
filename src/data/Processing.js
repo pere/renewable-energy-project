@@ -37,7 +37,7 @@ let continentsCleanArq = aq.from(continentsDataClean);
 
 console.warn(energyClean)
 
-beeswarm_data=aq.from(energyClean).select({
+let beeswarm_data_simple=aq.from(energyClean).select({
   country: 'country',
   year: 'year',
   iso_code: 'iso_code',
@@ -51,8 +51,11 @@ beeswarm_data=aq.from(energyClean).select({
   (d) =>
     op.abs(d.gdp) >= 0 &&
     op.abs(d.renewablesShareCon) >= 0
-).objects();
+)
+//.energyArq.join_full(continentsClean).objects()
 
+beeswarm_data=beeswarm_data_simple.join_left(continentsCleanArq).objects()    
 
 joinedData=energyCleanArq.join_left(continentsCleanArq).objects()    
-continentsArray = [...new Set(joinedData.filter(d=>d.continent).map(d => d.continent))] 
+continentsArray = [...new Set(joinedData.filter(d=>d!==undefined && d.continent).map(d => d.continent))] 
+//.filter(d => d !== undefined);

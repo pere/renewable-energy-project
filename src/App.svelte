@@ -60,7 +60,7 @@
 
 
 <svg class="beeswarm" {width} height=600 xmlns:svg='https://www.w3.org/2000/svg' viewBox='0 0 {width} {height}'>
-  <Beeswarm {width} height=600 {year} bind:my_beeswarmdata={beeswarm_data_filtered}/> 
+  <Beeswarm {width} height={600} {year} bind:my_beeswarmdata={beeswarm_data_filtered}/> 
 </svg>
 
 

@@ -11,7 +11,7 @@ export let year;
 export let my_beeswarmdata;
 
 let selected_datapoint;
-const maxRadius = 20;
+
 
 let padding = 0.5;
 let margin= {left: 120, right: 120, top: 100, bottom: 0};
@@ -30,11 +30,13 @@ console.log([d3.min(my_beeswarmdata,d=>d.gdpPerCap),d3.max(my_beeswarmdata,d=>d.
 $ : radiusScale = d3.scaleSqrt()
   .domain([d3.min(my_beeswarmdata,d=>d.gdpPerCap),d3.max(my_beeswarmdata,d=>d.gdpPerCap)])
   //.nice()
-  .range([2, 30])  
+  .range([2, 8])  
 
+  console.log(continentsArray)
+  console.warn([height + (margin.bottom -50), margin.top-50])
 $ : yScale = d3.scaleBand()
   .domain(continentsArray)
-  .range([height + margin.bottom -50, margin.top-50])
+  .range([(height + margin.bottom) -50, margin.top-50])
           
 
 $ :  colorScale = d3.scaleOrdinal()
@@ -65,6 +67,7 @@ function mouseover_fx(e,d)
                             .style('visibility', 'visible')
                             //.html('<span>'+d.country+'</span>')
                             .html(`<b>Country</b>: ${d.country} <br/>
+                            <b>Country</b>: ${d.continent} <br/>
                             <b>Year</b>: ${d.year} <br/>
                             <b>GDP per cap</b>: ${d.gdp.toLocaleString('en-US', {maximumFractionDigits: 2})}<br/>
                             <b>Renewable Consumption per cap</b>: ${d.renewablesShareCon}`)
@@ -86,7 +89,8 @@ function mouseover_fx(e,d)
 
     //my_beeswarmdata never get updated with cx or cy
     console.log(my_beeswarmdata)
-    $:simulation = d3.forceSimulation(year)
+
+    $:simulation = d3.forceSimulation(my_beeswarmdata)
     .force('x', d3.forceX((d) => xScale(d.renewablesShareCon)).strength(0.3))
     .force('y', d3.forceY((d) => yScale(d.continent)).strength(0.3))
     .force('collide', d3.forceCollide(d => radiusScale(d.gdpPerCap) + padding).strength(1))    
@@ -94,9 +98,9 @@ function mouseover_fx(e,d)
   
 	$:{
         console.log('simulating a tick')
-       // simulation.tick();
+        simulation.tick();
     }
-	//$:simulation.on("tick", update)
+	$:simulation.on("tick", update)
 
   
 

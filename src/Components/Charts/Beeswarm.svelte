@@ -6,6 +6,8 @@ import  {continentsArray}  from '../../data/Processing.js';
 export let width;
 export let height;
 
+import Axis from '../Common/Axis.svelte';
+
 export let year;
 
 export let my_beeswarmdata;
@@ -14,7 +16,8 @@ let selected_datapoint;
 
 
 let padding = 0.5;
-let margin= {left: 120, right: 120, top: 100, bottom: 0};
+let margin= {left: 120, right: 120, top: 40, bottom: 10};
+//height - margin.bottom - margin.top
 let nodes;
 $ : values=my_beeswarmdata;
 
@@ -36,7 +39,9 @@ $ : radiusScale = d3.scaleSqrt()
   console.warn([height + (margin.bottom -50), margin.top-50])
 $ : yScale = d3.scaleBand()
   .domain(continentsArray)
-  .range([(height + margin.bottom) -50, margin.top-50])
+  .range([(height + margin.bottom) -50, margin.top])
+  //get translated0,580
+  //.range([(height -100), margin.top])
           
 
 $ :  colorScale = d3.scaleOrdinal()
@@ -103,10 +108,13 @@ function mouseover_fx(e,d)
 	$:simulation.on("tick", update)
 
   
-
+    //<rect fill="black" stroke-width="2" {width} {height} stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke="#000000"/> 
 </script>
 
 
+ <Axis {width} {height} {margin} scale={xScale} position='bottom' /> 
+
+<g class='circles' pointer-events='none' stroke="2">
 
 {#each BeedisplayData as d,i}
 
@@ -128,12 +136,12 @@ function mouseover_fx(e,d)
       tooltip.style('visibility', 'hidden')
     }
   }
-    
-    
-  
 />
 
 {/each}
+</g>
+
+
 
 <!-- <div>Force here counts aressss{my_data.length} for year {my_data[0].year} or {m}</div> -->
 

@@ -10,6 +10,7 @@
   import Beeswarm from "./Components/Charts/Beeswarm.svelte";
   import Range from "./Components/Utils/Range.svelte";
 
+ 
   let width=650;
   let height=200;
   
@@ -59,8 +60,8 @@
 
 
 
-<svg class="beeswarm" {width} height=600 xmlns:svg='https://www.w3.org/2000/svg' viewBox='0 0 {width} {height}'>
-  <Beeswarm {width} height={600} {year} bind:my_beeswarmdata={beeswarm_data_filtered}/> 
+<svg class="beeswarm" width={650} height={600} xmlns:svg='https://www.w3.org/2000/svg' viewBox='0 0 650 600'>
+  <Beeswarm width={650} height={600} {year} bind:my_beeswarmdata={beeswarm_data_filtered}/> 
 </svg>
 
 

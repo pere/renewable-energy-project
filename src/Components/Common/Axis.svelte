@@ -4,11 +4,11 @@
   export let margin;
   export let scale;
   export let position;
-  export let format;
+  
   export let time;
   
   
-	alert(energyData.length)
+
 	$: nTicks = (position === 'bottom' || position === 'top' ) 
 		? width / 50
     : height / 50;
@@ -22,7 +22,7 @@
     : `translate(0, ${margin.right})`
 
   $: ticks = scale.ticks((!time)? nTicks : time)
-    .map(d => ({value: format(d), offset: scale(d)}));
+    .map(d => ({value: d, offset: scale(d)}));
     
   $: anchor = (x) => {
 		switch(true) {

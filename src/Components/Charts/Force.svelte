@@ -1,7 +1,7 @@
 <script>
-	import { onMount } from 'svelte';
+//	import { onMount } from 'svelte';
 
-import {scaleLinear, scaleBand} from 'd3-scale';
+
 import * as d3 from "d3";
 
 import d3Tip from 'd3-tip';
@@ -17,11 +17,12 @@ export let my_data;
 
 const maxRadius = 20;
 const margin = 40;
-
+/*
 onMount(  () => {
  // alert(d3.select('svg.force circle').length)
  
 })
+*/
 let nodes;
 $ : values=my_data;
 

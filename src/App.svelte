@@ -4,15 +4,18 @@
   //import xAxis from "./Components/Common/Axis.svelte";
   //import DataProcessing from "./Components/DataProcessing/Processing.svelte";
   //import energyData from './data/energyData_2010.json';
-  import  {joinedData,continentsArray}  from './data/Processing.js';
+  import  {joinedData,continentsArray,beeswarm_data}  from './data/Processing.js';
   import * as aq from "arquero";
   import Force from "./Components/Charts/Force.svelte";
+  import Beeswarm from "./Components/Charts/Beeswarm.svelte";
   import Range from "./Components/Utils/Range.svelte";
 
   let width=650;
-  let height=450;
+  let height=200;
   
   let year = 2013;
+
+  $ : beeswarm_data_filtered=beeswarm_data.filter((d)=>d.year==year)
 
   $ : filtered=joinedData.filter((d)=>d.year==year)
   $ : {
@@ -30,7 +33,6 @@
 
 <select bind:value={year}>
 	{#each years as d }
-
 	    <option id={d}>{d}</option> 
 	{/each}
 </select>
@@ -38,22 +40,33 @@
 
 
 <svg class="force" {width} {height} xmlns:svg='https://www.w3.org/2000/svg' viewBox='0 0 {width} {height}'>
-  <Force width=500 {height} bind:my_data={filtered}/> 
+  <Force {width} {height} {year} bind:my_data={filtered}/> 
 </svg>
 
 <div>
-  <label for="basic-range">Years {year}</label>
+<label for="basic-range">Years {year}</label>
 
-  <Range
-   bind:my_data={filtered} 
-    on:change={(e) => (year=e.detail.value)}
-    id="basic-slider"
-    min={2011}
-    max={2018}
-    initialValue={year}
-  />
+<Range
+ bind:my_data={filtered} 
+  on:change={(e) => (year=e.detail.value)}
+  id="basic-slider"
+  min={2011}
+  max={2018}
+  initialValue={year}
+/>
 
 </div>
+
+
+
+<svg class="beeswarm" {width} height=600 xmlns:svg='https://www.w3.org/2000/svg' viewBox='0 0 {width} {height}'>
+  <Beeswarm {width} height=600 {year} bind:my_beeswarmdata={beeswarm_data_filtered}/> 
+</svg>
+
+
+
+<div>
+
 
   	<div class='col'>
 		<p>Basic setup</p>
@@ -70,7 +83,7 @@
 		margin: 0 auto;
 	}
 
-	:global(.force) {
+	:global(.force),:global(.beeswarm) {
 	
 		margin-bottom:3rem;
 	}

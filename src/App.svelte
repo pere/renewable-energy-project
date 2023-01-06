@@ -33,9 +33,9 @@
 <div>Testing</div>
 
 <select bind:value={year}>
-	{#each years as d }
-	    <option id={d}>{d}</option> 
-	{/each}
+  {#each years as d }
+      <option id={d}>{d}</option> 
+  {/each}
 </select>
 
 
@@ -69,27 +69,28 @@
 <div>
 
 
-  	<div class='col'>
-		<p>Basic setup</p>
-		<button on:click={() => year = 2012}>2012</button>
-		<button on:click={() => year = 2015}>2015</button>
-	</div>
+    <div class='col'>
+    <p>Basic setup</p>
+    <button on:click={() => year = 2012}>2012</button>
+    <button on:click={() => year = 2015}>2015</button>
+  </div>
 
 </main>
 
 
  <style>
-	main {
-		padding: 1em;
-		margin: 0 auto;
-	}
-  :global(.beeswarm .axis text)
+  main {
+    padding: 1em;
+    margin: 0 auto;
+  }
+  :global(.beeswarm .axis text,.yAxis text)
   {
     fill:white;
+    font-size:.7rem;
   }
-	:global(.force),:global(.beeswarm)
+  :global(.force),:global(.beeswarm)
    {
-	
-		margin-bottom:3rem;
-	}
+  
+    margin-bottom:3rem;
+  }
 </style>

@@ -17,7 +17,7 @@
   let pinYAxis; // declare pins
   
   let padding = 0.5;
-  let margin= {left: 120, right: 120, top: 40, bottom: 10};
+  let margin= {left: 90, right: 20, top: 20, bottom: 10};
   //height - margin.bottom - margin.top
   let nodes;
   $ : values=my_beeswarmdata;
@@ -27,6 +27,7 @@
     .domain([0,100])
     .nice()
     .range([margin.left, width - margin.right])
+
   
     //console.info(d3.max(my_data,d=>d.gdpPerCap))
   console.log(continentsArray)
@@ -41,19 +42,15 @@
   
   $ : yScale = d3.scaleBand()
     .domain(continentsArray)
-    .range([(height + margin.bottom) -50, margin.top])
+    .range([(height + margin.bottom), margin.top])
   
-    $ : yScaleAxis =  d3.scaleBand()
-      .domain(continentsArray)
-      .range([(height + margin.bottom) -50, margin.top])
-      .padding([0.5]);
-    
-    
+ 
             
    // call axis generators on the scale and pin the SVG pins.
     $: if (pinYAxis) {
       
-      d3.select(pinYAxis).call(d3.axisLeft(yScaleAxis))
+      d3.select(pinYAxis).call(d3.axisLeft(yScale))
+      //.ticks(10);
       //.ticks(10);
       // select(pinXAxis).call(axisBottom(x).ticks(width / 60));
       //.ticks(width / 60)
@@ -112,7 +109,7 @@
       console.log(my_beeswarmdata)
   
       $:simulation = d3.forceSimulation(my_beeswarmdata)
-      .force('x', d3.forceX((d) => xScale(d.renewablesShareCon)).strength(0.3))
+      .force('x', d3.forceX((d) => xScale(d.renewablesShareCon)).strength(2))
       .force('y', d3.forceY((d) => yScale(d.continent)).strength(0.3))
       .force('collide', d3.forceCollide(d => radiusScale(d.gdpPerCap) + padding).strength(1))    
       //.tick();
@@ -128,10 +125,16 @@
   </script>
   
   <rect fill="black" stroke-width="2" {width} {height} stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke="#000000"/> 
+  
+       <g
+      class="yAxis"
+      bind:this={pinYAxis}
+      transform="translate({margin.left},-45)"
+    />
    <Axis {width} {height} {margin} scale={xScale} position='bottom' /> 
   <!-- <Axis {width} {height} {margin} scale={yScale} position='left' />  -->
   
-  
+ 
   
   <g class='circles' stroke="2">
   
@@ -159,15 +162,11 @@
   
   />
   
-   <g
-      class="yAxis"
-      bind:this={pinYAxis}
-      transform="translate({margin.left},{margin.top + height})"
-    />
+
   
   {/each}
   </g>
-  
+ 
   
   
   <!-- <div>Force here counts aressss{my_data.length} for year {my_data[0].year} or {m}</div> -->

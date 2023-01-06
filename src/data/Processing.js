@@ -28,7 +28,10 @@ let energyClean = energyData.map(d => {
   
     return newd;
   }).filter((d) =>
-      d.gdp >= 0 && d.renewablesShare >= 0 
+      d.gdp >= 0 
+      
+      //why??
+      && d.renewablesShare >= 0 
       //&& d.year === parseInt(year) &&
       && d.country !== "World"
     );
@@ -37,7 +40,7 @@ let continentsCleanArq = aq.from(continentsDataClean);
 
 console.warn(energyClean)
 
-let beeswarm_data_simple=aq.from(energyClean).select({
+/*.select({
   country: 'country',
   year: 'year',
   iso_code: 'iso_code',
@@ -46,15 +49,20 @@ let beeswarm_data_simple=aq.from(energyClean).select({
   renewables_share_energy: 'renewablesShareCon',
   renewables_share_elec: 'renewablesShareGen',
 })
+*/
+let beeswarm_data_simple=aq.from(energyClean)
+
+
 .derive({ gdpPerCap : d => d.gdp/d.population})
 .filter(
   (d) =>
     op.abs(d.gdp) >= 0 &&
-    op.abs(d.renewablesShareCon) >= 0
+    op.abs(d.renewables_share_energy) >= 0
 )
 //.energyArq.join_full(continentsClean).objects()
 
 beeswarm_data=beeswarm_data_simple.join_left(continentsCleanArq).objects()    
+console.log(beeswarm_data)
 
 joinedData=energyCleanArq.join_left(continentsCleanArq).objects()    
 continentsArray = [...new Set(joinedData.filter(d=>d!==undefined && d.continent).map(d => d.continent))] 

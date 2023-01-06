@@ -10,9 +10,9 @@
   import Axis from '../Common/Axis.svelte';
   
   export let year;
-  
+  export let param_force;
   export let my_beeswarmdata;
-  
+
   let selected_datapoint;
   let pinYAxis; // declare pins
   let verticalLine;
@@ -26,7 +26,7 @@
   
   
   $ : xScale =d3.scaleLinear()
-    .domain([0,100])
+    .domain([0,d3.max(my_beeswarmdata,d=>d[param_force])])
     .nice()
     .range([margin.left, width - margin.right])
 
@@ -66,7 +66,8 @@
   
   let tooltip = d3.select('body')
         .append('div')
-        .attr('id', 'beeswarm-tooltip')
+        
+        .attr('class', 'beeswarm-tooltip tooltip')
         .style('position', 'absolute')
         .style('z-index', '1')
         .style('visibility', 'hidden')
@@ -89,7 +90,7 @@
         _this
         .classed('increm',true)
         .transition()
-			  .duration(500)
+        .duration(500)
         .attr('r',this_r*2)
         .on('end',()=>
         {
@@ -123,7 +124,7 @@
                               <b>Country</b>: ${d.continent} <br/>
                               <b>Year</b>: ${d.year} <br/>
                               <b>GDP per cap</b>: ${d.gdp.toLocaleString('en-US', {maximumFractionDigits: 2})}<br/>
-                              <b>Renewable Consumption per cap</b>: ${d.renewablesShareCon}`)
+                              <b>Renewable Consumption per cap</b>: ${d[param_force]}`)
                               
                                   //.toLocaleString('en-US', {maximumFractionDigits:2})}
                          
@@ -142,9 +143,10 @@
   
       //my_beeswarmdata never get updated with cx or cy
       console.log(my_beeswarmdata)
+      console.info(param_force)
   
       $:simulation = d3.forceSimulation(my_beeswarmdata)
-      .force('x', d3.forceX((d) => xScale(d.renewablesShareCon)).strength(2))
+      .force('x', d3.forceX((d) => xScale(d[param_force])).strength(2))
       .force('y', d3.forceY((d) => yScale(d.continent)).strength(0.3))
       .force('collide', d3.forceCollide(d => radiusScale(d.gdpPerCap) + padding).strength(1))    
       //.tick();

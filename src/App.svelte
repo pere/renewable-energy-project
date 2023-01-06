@@ -83,6 +83,10 @@
     padding: 1em;
     margin: 0 auto;
   }
+  :global(circle:hover)
+ {
+  cursor:pointer;
+ }
   :global(.beeswarm .axis text,.yAxis text)
   {
     fill:white;

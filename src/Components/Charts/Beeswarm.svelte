@@ -15,11 +15,13 @@
   
   let selected_datapoint;
   let pinYAxis; // declare pins
+  let verticalLine;
   
   let padding = 0.5;
   let margin= {left: 90, right: 20, top: 20, bottom: 10};
   //height - margin.bottom - margin.top
   let nodes;
+  let all_nodes;
   $ : values=my_beeswarmdata;
   
   
@@ -76,7 +78,40 @@
   
   function mouseover_fx(e,d) 
       {
-               
+        let all=d3.select(all_nodes).selectAll('circle');
+        console.log(all.selectAll('increm').size())
+        all.attr('opacity',.5)
+
+        let _this=d3.select(e.target);
+        _this.attr('opacity',1);
+
+        let this_r=d3.select(e.target).attr('r')
+        _this
+        .classed('increm',true)
+        .transition()
+			  .duration(500)
+        .attr('r',this_r*2)
+        .on('end',()=>
+        {
+          _this
+          .classed('increm',false)
+          .transition()
+        .duration(100)
+        
+        .attr('r',this_r)
+        })       
+        
+
+        
+        all.attr('opacity',1);
+
+        var _line=d3.select(verticalLine);
+        _line.attr("x1", _this.attr("cx"))
+        .attr("y1", _this.attr("cy"))
+        .attr("y2", (height - margin.bottom))
+        .attr("x2",  _this.attr("cx"))
+        .attr("opacity", 1);
+
         const tooltipWidth = tooltip.node().offsetWidth;
         const tooltipHeight = tooltip.node().offsetHeight;
         tooltip
@@ -136,23 +171,29 @@
   
  
   
-  <g class='circles' stroke="2">
+  <g class='circles' bind:this={all_nodes} stroke="2">
   
   {#each BeedisplayData as d,i}
   
   <circle bind:this={nodes}
       r={radiusScale(d.gdpPerCap) }
       fill={colorScale(d.continent)}
-      fill-opacity={0.6}
+      fill-opacity={1}
       cx={d.x}
       cy={d.y}
+      on:mouseout={(e)=>
+      {
+        d3.select(verticalLine).attr('opacity',0);
+      }}
       on:mouseover={(e) => {selected_datapoint = d; mouseover_fx(e,d)}}
       on:mousemove={(e)=>{ 
+
+        
         const tooltipWidth = tooltip.node().offsetWidth;
         const tooltipHeight = tooltip.node().offsetHeight;
-      tooltip
-         .style("left", e.pageX - tooltipWidth/2 +'px')
-        .style("top", e.pageY-tooltipHeight - 10+'px')
+        tooltip
+          .style("left", e.pageX - tooltipWidth/2 +'px')
+          .style("top", e.pageY-tooltipHeight - 10+'px')
       }}
       on:mouseout={(e)=>{ 
         tooltip.style('visibility', 'hidden')
@@ -162,11 +203,13 @@
   
   />
   
-
-  
   {/each}
   </g>
- 
+
+  <line bind:this={verticalLine} stroke="white"
+  />
+
+
   
   
   <!-- <div>Force here counts aressss{my_data.length} for year {my_data[0].year} or {m}</div> -->

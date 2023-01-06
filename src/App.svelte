@@ -83,8 +83,12 @@
 		padding: 1em;
 		margin: 0 auto;
 	}
-
-	:global(.force),:global(.beeswarm) {
+  :global(.beeswarm .axis text)
+  {
+    fill:white;
+  }
+	:global(.force),:global(.beeswarm)
+   {
 	
 		margin-bottom:3rem;
 	}

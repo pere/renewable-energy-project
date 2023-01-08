@@ -1,7 +1,7 @@
 <script>
   //  import { onMount } from 'svelte';
   
-  
+  import { onMount } from 'svelte';  
   import * as d3 from "d3";
   import Axis from '../Common/Axis.svelte';
   import d3Tip from 'd3-tip';
@@ -14,7 +14,7 @@
   export let height;
   export let param_force;
   export let params_labels;
-  
+  export let continentsArray;
   export let year;
   
   export let my_data;
@@ -30,9 +30,10 @@
    
   })
   */
+ 
   function highlight(param_code)
                                 {
-                                  console.warn(param_code,param_force)
+                                 // console.warn(param_code,param_force)
                                   if (param_code==param_force)
                                   {
                                     
@@ -72,13 +73,46 @@
                   .domain([d3.min(my_data, d => d.gdp),d3.max(my_data, d => d.gdp)])
                   .range([3, maxRadius]);     
   
-            
   
-  $ :  colorScale = d3.scaleOrdinal()
-                  .domain([...new Set(my_data.map(d => d.continent))])
+  
+  
+  let colorScale = d3.scaleOrdinal()
+                  .domain(continentsArray)
                   .range(d3.schemeCategory10);
+    /*
+    onMount(() => {
+
+  let legend=d3.select('.legend')
+ alert(legend.size())
+
+    })
+    */
+   console.info(continentsArray)
+
+
+
+/*
+console.warn(d3.selectAll('.legend g'))
+alert(d3.sum(continentsArray))
+  // spacing <g>
+const padding = 10;
+d3.selectAll('.legend g')
+ .attr('transform', function (d, i) {
   
+  console.info(d3.select(this).node().getBBox())
   
+
+  return 'translate(' + (d3.sum(continentsArray, function (e, j) {
+    
+    if (j < i) { return d3.select(this).node().getBBox().width; } else { return 0; }
+  }) + padding * i) + ',0)';
+  
+ 
+});
+
+})
+*/
+
   let tooltip = d3.select('body')
         .append('div')
         .attr('class', 'force-tooltip tooltip')
@@ -117,7 +151,7 @@ console.warn(params_labels)
                                 
 
                                 if (param_code=='renewablesConsPerCap')
-                                return `<span ${highlight(param_code)}><b>Renewable Consumption per cap</b>: ${d[param_code].toLocaleString('en-US', {maximumFractionDigits:2})}</span>`
+                                return `<span ${highlight(param_code)}><b>`+param_label+`</b>: ${d[param_code].toLocaleString('en-US', {maximumFractionDigits:2})}</span>`
                                 else
                                 return `<span ${highlight(param_code)}><b>`+param_label+`</b>: ${d[param_code]}</span>`
 
@@ -154,8 +188,24 @@ console.warn(params_labels)
     $: simulation.on("tick", update)
   
     let innerH=height - margin.top - margin.bottom;
-  
+    let  format_k =function(d)
+    {
+      if (!param_force.includes('Perc'))
+      {
+      if (d/1000>1)
+      return d/1000 + " K"
+      else 
+      return d
+      }
+      else
+      {
+        if (param_force.includes('Twh'))
+        return d+' Twh'
+      }
+    }
   </script>
+ 
+  
   
   <g class="xAxis" transform="translate(0,0)">
    
@@ -167,8 +217,8 @@ console.warn(params_labels)
                 y={innerH}
                 transform={`translate(${xScaleAxis(d)},0)`}
               >
-            
-                {d/1000 + " K"}
+              {format_k(d)}
+              
               </text>
   
    {/each}
@@ -181,6 +231,7 @@ console.warn(params_labels)
       r={radiusScale(d.gdp) }
       fill={colorScale(d.continent)}
       fill-opacity={0.4}
+      data={JSON.stringify(d)}
       cx={d.x}
       cy={d.y}
       on:mouseover={(e) => {selected_datapoint = d; mouseover_fx(e,d)}}
